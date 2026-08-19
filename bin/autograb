@@ -1,0 +1,15 @@
+#!/bin/sh
+set -eu
+
+SCRIPT_DIRECTORY=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+PROJECT_DIRECTORY=$(dirname -- "$SCRIPT_DIRECTORY")
+
+cd "$PROJECT_DIRECTORY"
+
+NODE_MAJOR=$(node -p "process.versions.node.split('.')[0]")
+if [ "$NODE_MAJOR" -ne 24 ]; then
+  echo "AutoGrab requires Node.js 24 LTS; found $(node --version)." >&2
+  exit 1
+fi
+
+exec node --import tsx --env-file=.env src/index.ts

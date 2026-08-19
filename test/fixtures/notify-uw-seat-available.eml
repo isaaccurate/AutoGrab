@@ -1,0 +1,12 @@
+Date: Tue, 18 Aug 2026 19:20:44 +0000
+From: "Notify.UW" <notify-noreply@uw.edu>
+To: student@gmail.com
+Message-ID: <test-notify-uw-seat-available@us-west-2.amazonses.com>
+Subject: Notify.UW: TEST 101 A has seats available
+MIME-Version: 1.0
+Content-Type: text/html; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Authentication-Results: mx.google.com; dkim=pass header.i=@uw.edu; dkim=pass header.i=@amazonses.com; spf=pass smtp.mailfrom=test@us-west-2.amazonses.com; dmarc=pass header.from=uw.edu
+Feedback-ID: test:AmazonSES
+
+<p>TEST 101 A (SLN: 12345) <b>has</b> seats available. Go to <a href="https://register.uw.edu">UW Registration</a>.</p><p>Do NOT reply to this email.</p><p>To edit your course availability notification subscriptions, visit <a href="http://notify.uw.edu">Notify.UW</a>.</p><p>For support, please email <a href="mailto:help@uw.edu">help@uw.edu</a>.</p><hr/><div style="font-size:9pt"><p>To stop receiving all email notifications from Notify.UW at this address, <a href="https://notify.uw.edu/notify/#/block/">block this email address</a>.</p><p><a href="https://notify.uw.edu/">Visit Notify.UW</a> to unblock this address or to subscribe to notifications with a different email address.</p></div>

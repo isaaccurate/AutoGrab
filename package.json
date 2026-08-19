@@ -1,0 +1,38 @@
+{
+  "name": "autograb",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Event-driven university seat notification and guarded registration assistant.",
+  "type": "module",
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "scripts": {
+    "dev": "tsx watch --env-file=.env src/index.ts",
+    "start": "exec node --import tsx --env-file=.env src/index.ts",
+    "oauth:gmail": "tsx --env-file=.env scripts/authorize-gmail.ts",
+    "probe:gmail": "tsx --env-file=.env scripts/probe-gmail-imap.ts",
+    "browser:setup": "tsx --env-file=.env scripts/setup-uw-browser.ts",
+    "worker:dry-run": "tsx --env-file=.env scripts/run-registration-dry-run.ts",
+    "job:resume": "tsx --env-file=.env scripts/resume-registration-job.ts",
+    "target:sln": "tsx --env-file=.env scripts/set-target-slns.ts",
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "better-sqlite3": "12.11.1",
+    "google-auth-library": "^11.0.2",
+    "imapflow": "^1.7.1",
+    "playwright": "1.62.1",
+    "postal-mime": "^3.0.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "7.6.13",
+    "@types/node": "^24.0.0",
+    "tsx": "^4.23.12",
+    "typescript": "^5.9.0",
+    "vitest": "^4.1.11"
+  }
+}
