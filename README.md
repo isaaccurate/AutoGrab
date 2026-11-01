@@ -1,10 +1,21 @@
 # AutoGrab
 
-AutoGrab is an event-driven assistant for reacting to university seat-availability notifications. The MVP listens to a personal Gmail inbox through IMAP IDLE, validates a notification, extracts an allowlisted SLN, and hands a registration job to a guarded worker.
+AutoGrab is a student-built prototype for processing university seat-availability
+notifications. It listens to a personal Gmail inbox through IMAP IDLE, validates
+Notify.UW messages, extracts configured course SLNs, and records deduplicated
+jobs in SQLite.
 
-The current MVP authenticates, listens, validates candidate email, records an
-deduplicated durable registration job, and can dispatch a guarded live attempt
-automatically when the single registration mode is explicitly set to `live`.
+**By default, AutoGrab does not register for courses or change enrollment.**
+The default `dry-run` mode monitors email and queues jobs. A separately invoked
+browser dry run can fill a single SLN for inspection, with Add to cart and
+Update Schedule disabled. Enrollment is completed manually through the
+university's official registration system in this default workflow.
+
+The code also includes an experimental, explicitly enabled `live` mode that
+automatically submits registration attempts. Its behavior and limitations are
+documented below. AutoGrab is independent of UW and is not university-endorsed;
+the default mode does not establish compliance with university policies. Use
+only workflows permitted by the institution.
 
 ## Architecture
 
@@ -12,13 +23,17 @@ automatically when the single registration mode is explicitly set to `live`.
 Personal Gmail inbox
         |
         v
-IMAP IDLE listener --> validator --> SLN parser --> job queue
+IMAP IDLE listener --> validator / SLN parser --> SQLite job queue
                                                     |
-                                                    v
-                                   warm Chromium registration worker
-                                                    |
-                                                    v
-                                              result alerts
+                      +-----------------------------+--------------------+
+                      |                                                  |
+                      v                                                  v
+            Default: dry-run                                  Opt-in: live
+            Explicit browser preview                          Automatic worker
+            Submission disabled                               Warm Chromium
+                      |                                                  |
+                      v                                                  v
+            Manual registration                               Result alerts
 ```
 
 ## Setup and commands
@@ -34,11 +49,18 @@ npm run typecheck
 npm test
 npm run oauth:gmail
 npm run probe:gmail
-npm run browser:setup
-npm run worker:dry-run
-npm run job:resume -- <job-id>
 npm run target:sln
 npm start
+```
+
+Keep `AUTOGRAB_REGISTRATION_MODE=dry-run` in `.env` for the default
+notification-monitoring workflow. To inspect a queued single-SLN job in a
+browser, stop the listener and run these optional commands:
+
+```bash
+npm run browser:setup
+# Complete manual sign-in, then close setup with Ctrl-C.
+npm run worker:dry-run
 ```
 
 `npm run oauth:gmail` opens Google's desktop authorization flow and stores only
@@ -86,7 +108,12 @@ AUTOGRAB_REGISTRATION_MODE=dry-run
 ```
 
 In `dry-run`, `npm start` only validates notifications and queues jobs; browser
-testing remains an explicit `npm run worker:dry-run` action. In `live`, `npm
+testing remains an explicit `npm run worker:dry-run` action.
+
+## Experimental live mode (opt-in)
+
+Changing `.env` to `AUTOGRAB_REGISTRATION_MODE=live` enables automatic
+enrollment submissions; it does not request confirmation for each job. In `live`, `npm
 start` opens Chromium immediately. Complete UW sign-in manually in that window
 if requested, then leave it open. The Gmail listener runs alongside that same
 browser, and every automatic attempt reuses its already-authenticated page.
