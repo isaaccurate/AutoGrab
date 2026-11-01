@@ -201,7 +201,17 @@ becomes `uncertain` and is not automatically retried.
   authorization, preflight enrollment checks, and post-submission
   reconciliation before live implementation.
 
-## Current limitations
+## Known issues and limitations
+
+Tracked issues, ordered by implementation priority:
+
+| Issue | Impact | Current workaround |
+| --- | --- | --- |
+| [#2: Isolate registration cart contents between jobs](https://github.com/isaaccurate/AutoGrab/issues/2) | The worker does not verify that the cart contains only the current job's additions; leftover entries could affect a later submission. | After an abnormal attempt, stop the app, reconcile enrollment, and confirm the cart is empty before resuming. |
+| [#1: Detect expired UW sessions while idle](https://github.com/isaaccurate/AutoGrab/issues/1) | A rendered page can appear ready after server-side authentication expires, delaying the next attempt. | Check the session and complete manual sign-in before monitoring. |
+
+Each issue records the reproduction scenario, expected behavior, acceptance
+criteria, and test requirements. Neither fix is implemented yet.
 
 This is a macOS-oriented prototype with a UW-specific registration adapter.
 The computer must remain awake and connected while monitoring; use
